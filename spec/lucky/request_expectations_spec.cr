@@ -20,7 +20,7 @@ describe Lucky::RequestExpectations do
   end
 
   it "fails if an expected key is missing" do
-    failure_message = /Expected response to have JSON key "foo"/
+    failure_message = /Expected response to have JSON key "admin"/
     expect_raises Spec::AssertionFailed, failure_message do
       response = build_response(200, body: {foo: "bar"}.to_json)
       response.should send_json(200, admin: true)
@@ -28,6 +28,14 @@ describe Lucky::RequestExpectations do
   end
 
   it "fails and provides helpful error if key is missing and similar key is found" do
+  end
+
+  it "fails if key is present but value is incorrect" do
+    failure_message = /JSON response was incorrect/
+    expect_raises Spec::AssertionFailed, failure_message do
+      response = build_response(200, body: {admin: "true"}.to_json)
+      response.should send_json(200, admin: true)
+    end
   end
 
   it "passes if the response is exactly the same" do

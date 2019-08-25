@@ -28,13 +28,30 @@ module Lucky::RequestExpectations
       actual_parsed_json = JSON.parse(actual_response.body)
       expected_parsed_json = JSON.parse(expected_json)
 
-      result = expected_parsed_json.as_h.find do |key, value|
+      expected_key_value = expected_parsed_json.as_h.find do |key, value|
         !actual_parsed_json.as_h.has_key?(key) || actual_parsed_json.as_h[key] != value
+      end.not_nil!
+
+      expected_key = expected_key_value.first
+      if !actual_parsed_json.as_h.has_key?(expected_key)
+        <<-TEXT
+        Expected response to have JSON key #{expected_key.dump}, but it was not present.
+
+        Response keys: #{actual_parsed_json.as_h.keys.map(&.dump).join(", ")}
+        TEXT
+      else
+        <<-TEXT
+        JSON response was incorrect.
+
+        Expected #{expected_key.dump} to be:
+
+          #{expected_key_value.[1].inspect}
+
+        Instead got:
+
+          #{actual_parsed_json.as_h[expected_key].inspect}
+        TEXT
       end
-
-      pp! result
-
-      "Boo!"
     end
 
     #   <<-TEXT
