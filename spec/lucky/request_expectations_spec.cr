@@ -39,9 +39,13 @@ describe Lucky::RequestExpectations do
   end
 
   it "passes if the response is exactly the same" do
+    response = build_response(200, body: {name: "Paul"}.to_json)
+    response.should send_json(200, name: "Paul")
   end
 
   it "passes if the response has matching keys/values and ignores extra keys/values" do
+    response = build_response(200, body: {name: "Paul", dont_care: "about this"}.to_json)
+    response.should send_json(200, name: "Paul")
   end
 end
 

@@ -54,16 +54,6 @@ module Lucky::RequestExpectations
       end
     end
 
-    #   <<-TEXT
-    #   Expected response to have JSON key #{key}, but it was not present.
-
-    #   Got keys: #{actual_parsed_json.as_h.keys.join(", ")}
-    #   TEXT
-    #   break
-    # else
-    #   "No bueno"
-    # end
-
     def negative_failure_message(actual_value) : String
       "Negative fail!"
     end
